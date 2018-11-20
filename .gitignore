@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+venv
+migrations
+*.pyc
+db.sqlite3
+codes
+game_runner/server/server_linux_x86_64
