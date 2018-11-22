@@ -20,13 +20,13 @@ class Game(models.Model):
     team2_language = models.CharField(max_length=8, choices=((l, l) for l in LANGUAGES))
 
     def __str__(self):
-        return '{} vs {}; @{}'.format(self.team1_name, self.team2_name, self.date_added)
+        return 'GAME{}: {} vs {}'.format(self.game_id, self.team1_name, self.team2_name)
 
     def get_team1_code_path(self):
-        return os.path.join(BASE_DIR, 'codes', str(self.pk), 'team1')
+        return os.path.join(BASE_DIR, 'codes', str(self.game_id), 'team1')
 
     def get_team2_code_path(self):
-        return os.path.join(BASE_DIR, 'codes', str(self.pk), 'team2')
+        return os.path.join(BASE_DIR, 'codes', str(self.game_id), 'team2')
 
     def run(self, run_in_lxc=True):
         print('RUNNING GAME{}: {} vs {}'.format(self.game_id, self.team1_name, self.team2_name))

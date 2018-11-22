@@ -1,15 +1,12 @@
 import os
 import re
-
-import pyinotify
 import requests
+import pyinotify
 
+from django.core.management import BaseCommand
 from uiai2018_game_runner_server.settings import BASE_DIR
 
 CALLBACK_URL = 'http://acm.ui.ac.ir/uiai2018/games/callback/'
-
-wm = pyinotify.WatchManager()
-mask = pyinotify.IN_CREATE
 
 
 class GameCallbackHandler(pyinotify.ProcessEvent):
@@ -32,7 +29,15 @@ class GameCallbackHandler(pyinotify.ProcessEvent):
         requests.post(CALLBACK_URL, data=data, files=files)
 
 
-handler = GameCallbackHandler()
-notifier = pyinotify.Notifier(wm, handler)
-wdd = wm.add_watch(os.path.join(BASE_DIR, 'logs'), mask, rec=True)
-notifier.loop()
+class Command(BaseCommand):
+
+    def handle(self, *args, **options):
+        wm = pyinotify.WatchManager()
+        mask = pyinotify.IN_CREATE
+
+        handler = GameCallbackHandler()
+        notifier = pyinotify.Notifier(wm, handler)
+        wdd = wm.add_watch(os.path.join(BASE_DIR, 'logs'), mask, rec=True)
+        notifier.loop()
+        print('WATCHING FOR LOGS: {}'.format(os.path.join(BASE_DIR, 'logs')))
+        print('CALLBACK URL = {}'.format(CALLBACK_URL))
