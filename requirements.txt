@@ -2,3 +2,4 @@ django
 djangorestframework
 requests
 django-background-tasks
+pyinotify

@@ -1,12 +1,8 @@
-import os
-import zipfile
-import subprocess
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.status import *
 
 from server_api.models import Game
-from uiai2018_game_runner_server.settings import BASE_DIR
 
 
 @api_view(['GET'])
@@ -26,15 +22,5 @@ def request_game(request):
         team2_code=request.data['team2_code'],
     )
     game.save()
-    codes_dir = os.path.join(BASE_DIR, 'codes', str(game.pk))
-    with zipfile.ZipFile(game.team1_code.path, "r") as zip_ref:
-        zip_ref.extractall(os.path.join(codes_dir, 'team1'))
-    with zipfile.ZipFile(game.team2_code.path, "r") as zip_ref:
-        zip_ref.extractall(os.path.join(codes_dir, 'team2'))
-    run_in_lxc = request.data.get('run_in_lxc', True)
-    cmd = ['./run-lxc.sh'] if run_in_lxc else ['python3', 'run_game.py']
-    cmd += [str(game.game_id),
-            game.team1_name, game.team1_language, os.path.join(codes_dir, 'team1'),
-            game.team2_name, game.team2_language, os.path.join(codes_dir, 'team2')]
-    subprocess.Popen(cmd, cwd=os.path.join(BASE_DIR, 'game_runner'))
+    game.run()
     return Response({'message': 'Game added to queue'}, HTTP_201_CREATED)
