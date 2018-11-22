@@ -41,8 +41,7 @@ def return_results(game_id, callback_url):
     print('RETURNING TO MAIN SERVER: {}, {} {}:{} {}'.format(
         callback_url, results_team1[0], results_team1[1], results_team2[0], results_team2[1],
     ))
-    r = requests.post(callback_url, data=data, files=files)
-    print('{}: {}'.format(r.status_code, r.content))
+    requests.post(callback_url, data=data, files=files)
 
 
 if __name__ == '__main__':
