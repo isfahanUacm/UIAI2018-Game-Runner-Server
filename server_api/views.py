@@ -33,9 +33,9 @@ def request_game(request):
         zip_ref.extractall(os.path.join(codes_dir, 'team2'))
     run_in_lxc = request.data.get('run_in_lxc', True)
     if run_in_lxc:
-        subprocess.run(['./run-lxc.sh', str(game.game_id), game.team1_name, game.team1_language,
-                        os.path.join(codes_dir, 'team1'), game.team2_name, game.team2_language,
-                        os.path.join(codes_dir, 'team2')], cwd=BASE_DIR)
+        subprocess.Popen(['./run-lxc.sh', str(game.game_id), game.team1_name, game.team1_language,
+                          os.path.join(codes_dir, 'team1'), game.team2_name, game.team2_language,
+                          os.path.join(codes_dir, 'team2')], cwd=BASE_DIR)
     else:
         subprocess.Popen(
             ['python3', 'run_game.py', str(game.game_id), game.team1_name, game.team1_language,
