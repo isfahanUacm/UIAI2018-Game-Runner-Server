@@ -32,15 +32,9 @@ def request_game(request):
     with zipfile.ZipFile(game.team2_code.path, "r") as zip_ref:
         zip_ref.extractall(os.path.join(codes_dir, 'team2'))
     run_in_lxc = request.data.get('run_in_lxc', True)
-    if run_in_lxc:
-        subprocess.Popen(['./run-lxc.sh', str(game.game_id), game.team1_name, game.team1_language,
-                          os.path.join(codes_dir, 'team1'), game.team2_name, game.team2_language,
-                          os.path.join(codes_dir, 'team2')], cwd=BASE_DIR)
-    else:
-        subprocess.Popen(
-            ['python3', 'run_game.py', str(game.game_id), game.team1_name, game.team1_language,
-             os.path.join(codes_dir, 'team1'), game.team2_name, game.team2_language, os.path.join(codes_dir, 'team2'),
-             request.data['callback_url']],
-            cwd=os.path.join(BASE_DIR, 'game_runner')
-        )
+    cmd = ['./run-lxc.sh'] if run_in_lxc else ['python3', 'run_game.py']
+    cmd += [str(game.game_id),
+            game.team1_name, game.team1_language, os.path.join(codes_dir, 'team1'),
+            game.team2_name, game.team2_language, os.path.join(codes_dir, 'team2')]
+    subprocess.Popen(cmd, cwd=os.path.join(BASE_DIR, 'game_runner'))
     return Response({'message': 'Game added to queue'}, HTTP_201_CREATED)
