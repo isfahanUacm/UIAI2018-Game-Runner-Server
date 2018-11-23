@@ -1,8 +1,10 @@
 import os
 import re
-import time
+import sys
 import requests
+import traceback
 import pyinotify
+from datetime import datetime
 
 from django.core.management import BaseCommand
 from uiai2018_game_runner_server.settings import BASE_DIR
@@ -33,9 +35,12 @@ class GameCallbackHandler(pyinotify.ProcessEvent):
             response = requests.post(CALLBACK_URL, data=data, files=files)
             print('GAME{}: {}'.format(game_id, response.status_code))
         except BaseException as e:
-            output_path = os.path.join(BASE_DIR, 'error-logs', 'error-{}.txt'.format(game_id if game_id else int(time.time())))
+            error_log_file_name = str(game_id) if game_id is not None else datetime.now().isoformat()
+            error_log = [error_log_file_name, str(e), type(e).__name__] + traceback.format_tb(sys.exc_info()[2])
+            print('\n'.join(error_log))
+            output_path = os.path.join(BASE_DIR, 'error-logs', 'error-{}.txt'.format(error_log_file_name))
             with open(output_path, 'w+') as f:
-                f.write(str(e))
+                f.writelines(error_log)
 
 
 class Command(BaseCommand):
