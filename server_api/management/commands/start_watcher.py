@@ -33,7 +33,7 @@ class GameCallbackHandler(pyinotify.ProcessEvent):
             response = requests.post(CALLBACK_URL, data=data, files=files)
             print('GAME{}: {}'.format(game_id, response.status_code))
         except BaseException as e:
-            output_path = os.path.join(BASE_DIR, 'error-{}.txt'.format(game_id if game_id else int(time.time())))
+            output_path = os.path.join(BASE_DIR, 'error-logs', 'error-{}.txt'.format(game_id if game_id else int(time.time())))
             with open(output_path, 'w+') as f:
                 f.write(str(e))
 
