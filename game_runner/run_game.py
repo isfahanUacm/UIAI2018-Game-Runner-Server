@@ -2,7 +2,7 @@ import os
 import sys
 import time
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from game_runner.server import server_runner
 from game_runner.client import client_runner
