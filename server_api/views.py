@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.status import *
 
-from server_api.models import Game
+from server_api.models import Game, CompileRequest
 
 
 @api_view(['GET'])
@@ -24,3 +24,19 @@ def request_game(request):
     game.save()
     game.run()
     return Response({'message': 'Game added to queue'}, HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+def request_compile(request):
+    code_id = request.data.get('id')
+    code_file = request.data.get('code')
+    code_language = request.data.get('language')
+
+    compilation_request = CompileRequest(
+        code_id=code_id,
+        code_zip=code_file,
+        language=code_language,
+    )
+    compilation_request.save()
+    compilation_request.compile()
+    return Response(compilation_request.get_callback_dict())
