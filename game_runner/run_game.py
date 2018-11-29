@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+from subprocess import TimeoutExpired
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -23,7 +24,10 @@ def run_game(game_id, team1_name, team1_language, team1_path, team2_name, team2_
     client1_process = language_runners[team1_language](team1_path)
     client2_process = language_runners[team2_language](team2_path)
 
-    server_process.wait()
+    try:
+        server_process.wait(timeout=15 * 60)
+    except TimeoutExpired:
+        pass
 
 
 if __name__ == '__main__':
