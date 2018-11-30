@@ -4,7 +4,7 @@ import subprocess
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 SERVER_DIR_PATH = os.path.join(BASE_DIR, 'server_linux_x86_64')
-SERVER_FILE_NAME = 'UIAI2018Server_Linux_x86_64_2.0.x86_64'
+SERVER_FILE_NAME = 'UIAI2018Server_Linux_x86_64_3.0.x86_64'
 
 
 def start(game_id, team1_name, team2_name):
