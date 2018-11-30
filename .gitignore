@@ -8,3 +8,4 @@ codes
 run-lxc.sh
 logs
 error-logs/
+game_runner/server/server_linux_x86_64
