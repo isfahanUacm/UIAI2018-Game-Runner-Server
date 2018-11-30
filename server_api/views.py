@@ -22,7 +22,7 @@ def request_game(request):
         team2_code=request.data['team2_code'],
     )
     game.save()
-    game.run(run_in_lxc=False)
+    game.run()
     return Response({'message': 'Game added to queue'}, HTTP_201_CREATED)
 
 
