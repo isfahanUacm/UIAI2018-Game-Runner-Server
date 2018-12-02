@@ -8,7 +8,7 @@ from server_api.models import Game, CompileRequest
 @api_view(['GET'])
 def get_server_status(request):
     running_count = Game.objects.filter(is_running=True).count()
-    if running_count > 8:
+    if running_count >= 8:
         return Response({'message': 'Overload, currently running {} games'.format(running_count)},
                         status=HTTP_503_SERVICE_UNAVAILABLE)
     else:
