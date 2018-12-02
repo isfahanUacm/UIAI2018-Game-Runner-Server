@@ -7,6 +7,8 @@ from server_api.models import Game, CompileRequest
 
 @api_view(['GET'])
 def get_server_status(request):
+    if request.GET['for_compile']:
+        return Response({'message': 'READY'}, status=HTTP_200_OK)
     running_count = Game.objects.filter(is_running=True).count()
     if running_count >= 8:
         return Response({'message': 'Overload, currently running {} games'.format(running_count)},
