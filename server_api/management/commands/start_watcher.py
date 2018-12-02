@@ -8,6 +8,7 @@ from datetime import datetime
 
 from django.core.management import BaseCommand
 from uiai2018_game_runner_server.settings import BASE_DIR
+from server_api.models import Game
 
 CALLBACK_URL = 'http://acm.ui.ac.ir/uiai2018/games/callback/'
 
@@ -20,6 +21,9 @@ class GameCallbackHandler(pyinotify.ProcessEvent):
             log_path = event.pathname
             print('LOG DETECTED: {}'.format(log_path))
             game_id = re.findall(r'(\d+).log', log_path)[0]
+            game = Game.objects.get(game_id=game_id)
+            game.is_running = False
+            game.save()
             with open(log_path, 'r') as lf:
                 log = lf.read()
                 results = re.findall(r'END\n([^\n]*)', log)[0].split(':')

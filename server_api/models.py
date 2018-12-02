@@ -20,6 +20,7 @@ class Game(models.Model):
     team2_code = models.FileField(upload_to='codes')
     team2_language = models.CharField(max_length=8, choices=((l, l) for l in LANGUAGES))
     run_log = models.TextField(max_length=8192, default='\n')
+    is_running = models.BooleanField(default=False)
 
     def __str__(self):
         return 'GAME{}: {} vs {}'.format(self.game_id, self.team1_name, self.team2_name)
@@ -35,6 +36,7 @@ class Game(models.Model):
         self.save()
 
     def run(self, run_in_lxc=True):
+        self.is_running = True
         self.write_to_log('RUNNING GAME{}: {} vs {}'.format(self.game_id, self.team1_name, self.team2_name))
         codes_dir = os.path.join(BASE_DIR, 'codes', str(self.game_id))
         with zipfile.ZipFile(self.team1_code.path, "r") as zip_ref:
