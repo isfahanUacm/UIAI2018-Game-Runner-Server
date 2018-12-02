@@ -19,7 +19,7 @@ class Game(models.Model):
     team2_name = models.CharField(max_length=32)
     team2_code = models.FileField(upload_to='codes')
     team2_language = models.CharField(max_length=8, choices=((l, l) for l in LANGUAGES))
-    run_log = models.TextField(max_length=8192, blank=True, null=True)
+    run_log = models.TextField(max_length=8192, default='\n')
 
     def __str__(self):
         return 'GAME{}: {} vs {}'.format(self.game_id, self.team1_name, self.team2_name)
