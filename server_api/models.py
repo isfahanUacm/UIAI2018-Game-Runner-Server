@@ -40,7 +40,7 @@ class Game(models.Model):
         cmd += [str(self.game_id),
                 self.team1_name, self.team1_language, os.path.join(codes_dir, 'team1'),
                 self.team2_name, self.team2_language, os.path.join(codes_dir, 'team2')]
-        subprocess.Popen(cmd, cwd=os.path.join(BASE_DIR, 'game_runner'))
+        subprocess.run(cmd, cwd=os.path.join(BASE_DIR, 'game_runner'), shell=True)
 
 
 class CompileRequest(models.Model):
