@@ -79,9 +79,21 @@ class CompileRequest(models.Model):
     def compile(self):
         self.extract()
         if self.language == CompileRequest.PYTHON:
-            self.compile_status_text = 'بدون نیاز به کامپایل'
-            self.compilation_status = CompileRequest.COMPILATION_OK
-            self.save()
+            has_strategy_file = 'Strategy.py' in os.listdir(self.get_extraction_path())
+            has_game_file = 'Game.py' in os.listdir(self.get_extraction_path())
+            has_client_file = 'client.py' in os.listdir(self.get_extraction_path())
+            if has_client_file and has_game_file and has_strategy_file:
+                self.compile_status_text = 'بدون نیاز به کامپایل'
+                self.compilation_status = CompileRequest.COMPILATION_OK
+                self.save()
+            else:
+                error_text = 'پوشه کلاینت ناقص است:\n'
+                error_text += 'فایل Strategy.py یافت نشد.\n' if not has_strategy_file else ''
+                error_text += 'فایل Game.py یافت نشد.\n' if not has_game_file else ''
+                error_text += 'فایل client.py یافت نشد.\n' if not has_client_file else ''
+                self.compile_status_text = error_text
+                self.compilation_status = CompileRequest.COMPILATION_ERROR
+                self.save()
         elif self.language == CompileRequest.JAVA:
             self.compilation_status = CompileRequest.COMPILING
             self.save()
