@@ -43,12 +43,12 @@ class Game(models.Model):
             zip_ref.extractall(os.path.join(codes_dir, 'team1'))
         with zipfile.ZipFile(self.team2_code.path, "r") as zip_ref:
             zip_ref.extractall(os.path.join(codes_dir, 'team2'))
-        cmd = ['./run-lxc.sh'] if run_in_lxc else ['python3', 'run_game.py']
+            cmd = ['bash', 'run-lxc.sh'] if run_in_lxc else ['python3', 'run_game.py']
         cmd += [str(self.game_id),
                 self.team1_name, self.team1_language, os.path.join(codes_dir, 'team1'),
                 self.team2_name, self.team2_language, os.path.join(codes_dir, 'team2')]
         self.write_to_log(' '.join(cmd))
-        subprocess.Popen(cmd, cwd=os.path.join(BASE_DIR, 'game_runner'), shell=True)
+        subprocess.Popen(cmd, cwd=os.path.join(BASE_DIR, 'game_runner'))
 
 
 class CompileRequest(models.Model):
