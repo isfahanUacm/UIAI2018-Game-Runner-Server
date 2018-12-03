@@ -12,7 +12,7 @@ from game_runner.client import client_runner
 def run_game(game_id, team1_name, team1_language, team1_path, team2_name, team2_language, team2_path):
     print('WAITING FOR SERVER')
     server_process = server_runner.start(game_id=game_id, team1_name=team1_name, team2_name=team2_name)
-    time.sleep(8)
+    time.sleep(5)
     print('RUNNING CLIENTS')
 
     language_runners = {
