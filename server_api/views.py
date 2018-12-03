@@ -1,20 +1,24 @@
+import subprocess
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.status import *
 
 from server_api.models import Game, CompileRequest
+from game_runner.server.server_runner import SERVER_FILE_NAME
 
 
 @api_view(['GET'])
 def get_server_status(request):
     if 'for_compile' in request.GET and request.GET['for_compile']:
         return Response({'message': 'READY'}, status=HTTP_200_OK)
-    running_count = Game.objects.filter(is_running=True).count()
+    ps_output = subprocess.run(['ps', 'aux'], stdout=subprocess.PIPE)
+    running_count = ps_output.stdout.decode('utf-8').count(SERVER_FILE_NAME)
+    print(running_count)
     if running_count >= 8:
         return Response({'message': 'Overload, currently running {} games'.format(running_count)},
                         status=HTTP_503_SERVICE_UNAVAILABLE)
     else:
-        return Response({'message': 'READY'}, status=HTTP_200_OK)
+        return Response({'message': 'READY', 'running': running_count}, status=HTTP_200_OK)
 
 
 @api_view(['POST'])
